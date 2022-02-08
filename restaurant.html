@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"> 
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
+</head>
+
+<style>
+    body {
+      font-family: 'Open Sans', sans-serif;
+      /* background-color: rgb(241, 223, 195); */
+      background-color: #D8EBFC;
+    }
+    h2 {
+      text-align: center;
+    }
+    h4 {
+      text-align: center;
+    }
+    .yum {
+      border-radius: 15px;
+      padding-top: 1em;
+      padding-bottom: 1em;
+      padding-left: 1em;
+      padding-right: 1em;
+    }
+    .image img {
+      height: 300px;
+      width: 500px;
+      /* border: 1px solid black; */
+      padding: 0;
+      /* background-color: #8ACAFE; */
+    }
+    .image {
+        padding: 1%;
+        /* display: flex; */
+        justify-content: center;
+    }
+    .restaurant li{
+        text-decoration: none;
+        list-style: none;
+    }
+    .restaurant a{
+        text-decoration: none;
+        color: black;
+        font-style: italic;
+    }
+    .restaurant {
+        padding: 1rem;
+        padding-right: 2rem;
+        margin: 0.7%;
+        margin-right: 5%;
+        border: 1px solid black;
+        border-radius: 2%;
+        /* display: flex; */
+    }
+    .restaurant:hover {
+        cursor: pointer;
+        background-color: #8ACAFE;
+    }
+    p {
+        text-align: center;
+    }
+    .dishname {
+        font-weight: bolder;
+    }
+    .stars {
+        display: flex;
+        /* display: hidden; */
+        float: right;
+    }
+    .star {
+        height: 25px;
+        width: 25px;
+        padding-left: 2%;
+        padding-right: 2%;
+    }
+    input[type=text] {
+      padding: 1%;
+      border: none;
+      font-size: 15px;
+    }
+    .dish {
+      text-align: center;
+    }
+    button {
+      padding: 2%;
+      font-size: 15px;
+    }
+    input[type="text"] {
+      font-family: 'Open Sans', sans-serif;
+      padding: 8px 12px;
+      margin: 8px 0;
+      display: inline-block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      font-family: 'Open Sans', sans-serif;
+      font-size: 1em;
+      margin: 0;
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 25%;
+      background-color: white;
+      padding: 8px 14px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    select {
+      font-family: 'Open Sans', sans-serif;
+      width: 50%;
+      font-size: 1em;
+      padding: 8px 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: white;
+    }
+    .box {
+      background-color: #D8EBFC;
+      border-radius: 15px;
+      padding: 1em;
+      text-align: center;
+    }
+</style>
+
+<body id="body">
+
+    <div class="box">
+      <h2>Restaurants</h2>
+
+      <div class="dish">
+        <p>Enter the name of a dish: </p><input type="text" id="res_dish" placeholder="Pasta..."> <br><br>
+        <p>Enter your zipcode: </p><input type="text" id="zipcode" placeholder="77840..."> <br><br>
+        <button onclick="dish()" id="submit">Submit</button>
+        <br>
+      </div>
+    </div>
+
+    <br>
+    
+    <div id="restaurant_search">
+        
+      <div class="image box">
+          <h4><u> Map: </u></h4>
+          <p id = "image_preview"></p>
+      </div>
+
+      <br>
+
+      <div class="box">
+        <p id = "dish_name"></p>
+
+        <div id="restaurants">
+          <p id = "restaurants"></p>
+        </div>
+      </div>
+
+    </div>
+
+</body>
+
+  <script>
+
+    document.getElementById("restaurant_search").style.display = "none";
+
+    var zipcode_input = document.getElementById("zipcode");
+    zipcode_input.addEventListener("keyup", function(event) {
+      if (event.keyCode === 13) {
+      event.preventDefault();
+      document.getElementById("submit").click();
+      }
+    });
+    
+    function get_restaurants(restaurant_result) {
+      var restaurants = restaurant_result.restaurants;
+      var map = restaurant_result.map;
+      var html = "<ul>";
+      for (var i = 0; i < restaurants.length; i++) {
+        console.log(restaurants[i].name);
+        html += '<div  class="restaurant"><li> <a href = "' + restaurants[i].website + '" target="_blank">' + restaurants[i].name + '</a></li></div><br>';
+      }
+
+      html += "</ul>";
+      var image = '<img src ="' + map + '" alt="Maps view with nearby restaurants" style="width: 250px; height: 265px;"/>';
+      document.getElementById("image_preview").innerHTML = image;
+      document.getElementById("restaurants").innerHTML = html;
+
+    }
+
+    function dish() {
+      document.getElementById("body").style.background = "white";
+      // get dish selection as input
+      var dish = document.querySelector("#res_dish").value;
+      var zipcode = document.querySelector("#zipcode").value;
+      var dish_name_input = '<p>Restaurants near you that serve <span class="dishname">' + dish + "</span>:</p>";
+      document.getElementById("dish_name").innerHTML = dish_name_input;
+      console.log(dish);
+      // run function: get dish results
+      google.script.run.withSuccessHandler(get_restaurants).restaurant_api_call(dish, zipcode);
+      google.script.run.withSuccessHandler(function () {
+        console.log("adding map to doc")
+      }).insert_map(dish, zipcode);
+      document.getElementById("restaurant_search").style.display = "block";
+    }
+
+  </script>
+
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com"> 
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
+    <title>Document</title>
+  </head>
+  <style>
+    h4 {
+      font-weight: bold;
+      text-decoration: underline;
+    }
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background-color: rgb(234, 223, 238);
+    }
+    input[type=text] {
+      padding: 1%;
+      border: none;
+      font-size: 15px;
+    }
+    .title {
+      text-align: center;
+      background-color: rgb(234, 223, 238);
+      border-radius: 15px;
+      padding: 1em;
+    }
+    .preview {
+      text-align: center;
+      background-color: rgb(234, 223, 238);
+      border-radius: 15px;
+      padding: 1em;
+    }
+    .tool {
+      text-align: center;
+      background-color: rgb(234, 223, 238);
+      border-radius: 15px;
+      padding: 1em;
+    }
+    .image {
+      width: 300px;
+      border-radius: 10px;
+    }
+    ol li {
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      -ms-word-break: break-all;
+      word-break: break-word;
+    }
+    .recipe li{
+        text-decoration: none;
+        list-style: none;
+    }
+    .recipe a{
+        text-decoration: none;
+        color: black;
+        font-style: italic;
+    }
+    .recipe {
+        padding: 1rem;
+        padding-right: 2rem;
+        margin: 0.7%;
+        margin-right: 5%;
+        border: 1px solid black;
+        border-radius: 2%;
+        /* display: flex; */
+    }
+    .recipe:hover {
+        cursor: pointer;
+        background-color: #C3B1E1;
+    }
+    .recipe:hover a{
+      color: #FFFFFF;
+    }
+    .videos li{
+        text-decoration: none;
+        list-style: none;
+    }
+    .videos a{
+        text-decoration: none;
+        color: black;
+        font-style: italic;
+    }
+    .videos {
+        padding: 1rem;
+        padding-right: 2rem;
+        margin: 0.7%;
+        margin-right: 5%;
+        border: 1px solid black;
+        border-radius: 2%;
+        /* display: flex; */
+    }
+    .videos:hover {
+        cursor: pointer;
+        color: #FFFFFF;
+        background-color: #C3B1E1;
+    }
+    .videos:hover a{
+      color: #FFFFFF;
+    }
+    p {
+        text-align: center;
+    }
+    input[type="text"] {
+      font-family: 'Open Sans', sans-serif;
+      padding: 8px 12px;
+      margin: 8px 0;
+      display: inline-block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      font-family: 'Open Sans', sans-serif;
+      font-size: 1em;
+      margin: 0;
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 25%;
+      background-color: white;
+      padding: 8px 14px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    select {
+      font-family: 'Open Sans', sans-serif;
+      width: 50%;
+      font-size: 1em;
+      padding: 8px 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: white;
+    }
+  </style>
+
+  <body id = "body">
+
+    <div class="title">
+      <h2>Make At Home</h2>
+      <div class="dish_name">
+      <p>Enter the name of a dish: </p><input type="text" placeholder="Pasta..." id="dish" name="dish">
+      </div>
+      <br>
+      <div class="home" id="home">
+        <button id="homeButton" onclick="dish_results()">Submit</button>
+        <br>
+      </div>
+    </div>
+    <br>
+    <div class = "results" id = "results">
+    <div class="preview">
+    <h4><u>Recipe Preview</u></h4>
+    <p id = "image_preview"></p>
+    </div>
+    <br>
+    <div class="tool">
+      <h4>Webpages</h4>
+      <p id = "recipe_links"></p>
+    </div>
+    <br>
+    <div class="tool">
+      <h4>Videos</h4>
+      <p id = "youtube_links"></p>
+    </div>
+    </div>
+  </body>
+
+    <script type = "text/javascript"> 
+
+    var dish_input = document.getElementById("dish");
+    dish_input.addEventListener("keyup", function(event) {
+      if (event.keyCode === 13) {
+      event.preventDefault();
+      document.getElementById("homeButton").click();
+      }
+    });
+
+    document.getElementById("results").style.display = "none";
+      function get_recipes(output) {
+        var list = "<ol>";
+        var length = output.length;
+        if (length > 5) {
+          length = 5;
+        }
+        for (var i = 0; i < length; i++) {
+          list += '<div class = "recipe"><li><a href="'+output[i].urlLink + '" target="_blank">' + output[i].titleDish + "</a></li></div>";
+          // list += '<li>'+output[i].urlLink +'</li>';
+          list += "<br>";
+        }
+        list += "</ol>";
+        var image = '<img src ="' + output[0].image + '" style="width: 250px; height: 265px;"/>';
+        document.getElementById("image_preview").innerHTML = image;
+        document.getElementById("recipe_links").innerHTML = list;
+      }
+
+      function get_youtube_videos(output) {
+        var list = "<ol>";
+        var length = output.length;
+        if (length > 5) {
+          length = 5;
+        }
+        for (var i = 0; i < length; i++) {
+          list += '<div class = "videos"><li><a href="'+output[i].urlLink + '" target="_blank">' + output[i].title + "</a></li></div>";
+          // list += '<li>'+output[i].urlLink +'</li>';
+          list += "<br>";
+        }
+        list += "</ol>";
+        document.getElementById("youtube_links").innerHTML = list;
+      }
+
+      function dish_results() {
+        document.getElementById("body").style.background = "white";
+        // get dish selection as input
+        // google.script.run.get_make_at_home_results();
+        var dish = document.querySelector("#dish").value;
+        console.log(dish);
+        // run function: get dish results
+        google.script.run.withSuccessHandler(get_recipes).recipe_api_call2(dish);
+        google.script.run.withSuccessHandler(get_youtube_videos).youtube_api_call(dish);
+        google.script.run.withSuccessHandler(function () {
+          console.log("adding dish image to doc")
+        }).insert_dish_image(dish);
+        document.getElementById("results").style.display = "block";
+      }
+    </script>
+</html>

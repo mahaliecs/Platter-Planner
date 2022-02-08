@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com"> 
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
+  </head>
+
+  <style>
+    
+    body {
+      text-align: center;
+      font-family: 'Open Sans', sans-serif;
+    }
+    h2 {
+      text-align: center;
+    }
+    h4 {
+      text-align: center;
+    }
+    .units {
+      background-color: rgb(255, 248, 209);
+      border-radius: 15px;
+      padding: 1em;
+    }
+    .units button {
+      margin: 0;
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .subs {
+      background-color: rgb(255, 248, 209);
+      border-radius: 15px;
+      padding: 1em;
+    }
+    .subs button {
+      margin: 0;
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .fun {
+      background-color: rgb(255, 248, 209);
+      border-radius: 15px;
+      padding: 1em;
+    }
+    .fun button {
+      margin: 0;
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .res {
+        padding: 1rem;
+        padding-right: 2rem;
+        margin: 0.7%;
+        margin-right: 5%;
+        border: 1px solid black;
+        border-radius: 2%;
+    }
+    .res li{
+        font-size: 0.8em;
+        text-decoration: none;
+        list-style: none;
+    }
+    input[type="text"] {
+      font-family: 'Open Sans', sans-serif;
+    }
+    input[type=text] {
+      padding: 8px 12px;
+      margin: 8px 0;
+      display: inline-block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      font-family: 'Open Sans', sans-serif;
+      font-size: 1em;
+      width: 25%;
+      background-color: white;
+      padding: 8px 14px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    select {
+      font-family: 'Open Sans', sans-serif;
+      width: 50%;
+      font-size: 1em;
+      padding: 8px 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: white;
+    }
+
+  </style>
+
+  <body>
+
+    <div class="units">
+      <h3>Unit Converter</h3>
+      <form>
+
+        <label for="convert_from">From:</label>
+        <select name="conv_from" id="conv_from">
+          <option value="tbsp">Tablespoons</option>
+          <option value="tsp">Teaspoons</option>
+          <option value="cups">Cups</option>
+          <option value="liters">Liters</option>
+          <option value="grams">Grams</option>
+        </select>
+        <input type="text" id="from_num" name="from_num">
+        <br><br>
+
+        <label for="convert_to">To:</label>
+        <select name="conv_to" id="conv_to">
+          <option value="tbsp">Tablespoons</option>
+          <option value="tsp">Teaspoons</option>
+          <option value="cups">Cups</option>
+          <option value="liters">Liters</option>
+          <option value="grams">Grams</option>
+        </select>
+        <input type="text" id="to_num" name="to_num">
+        <br><br>
+        <p id="test"></p>
+      </form>
+      <button onclick="conv_results()">Submit</button>
+      <br>
+    </div>
+    
+    <br>
+
+    <div class="subs">
+      <h3>Ingredient Substitutions</h3>
+
+      <form>
+        <label for="ing_to_sub">Ingredient to Substitute:</label>
+        <input type="text" id="ingredient" name="ingredient" placeholder="Butter...">
+        <br><br>
+        <!-- <p onclick="tempbox('convert')">Submit</p> -->
+      </form>
+      <button onclick="subs_results()">Submit</button>
+      <br>
+      <p id="sub_res"></p>
+    </div>
+    <br>
+    <div class="fun">
+      <h3>Learn the Origin of a Dish!</h3>
+      <form><label for="enter_name">Enter the name of a dish:</label><input type="text" placeholder="Pasta..." id="dish" name="dish">
+      <br><br>
+      </form>
+      <button onclick="get_origin()">Submit</button>
+      <br>
+      <p id = "origin"></p>
+    </div>
+
+  </body>
+
+  <script>
+    function get_origin() {
+      var dish = document.querySelector("#dish").value;
+      console.log(dish);
+      google.script.run.withSuccessHandler(return_origin).recipe_api_call2(dish);
+    }
+    function return_origin(output) {
+      var dish = document.querySelector("#dish").value;
+      google.script.run.show_cuisine(dish,output[0].cuisineDish);
+    }
+
+    function get_val(output) {
+      // google.script.run.check(output);
+      document.querySelector("#to_num").value = output;
+    }
+
+    function get_arr(output) {
+      google.script.run.check(output);
+      var list = "<ul>";
+      for (var i = 0; i < output.length; i++) {
+        list += "<div class='res'><li>"+output[i]+"</li></div><br>";
+      }
+      list += "</ul>"
+      document.getElementById("sub_res").innerHTML = list;
+    }
+
+    function conv_results() {
+      // get selections as input
+      var sel_from = document.querySelector("#conv_from")[document.querySelector("#conv_from").selectedIndex].innerHTML;
+      var sel_to = document.querySelector("#conv_to")[document.querySelector("#conv_to").selectedIndex].innerHTML;
+      var amount = document.querySelector("#from_num").value;
+
+      // run function: example output "2 cups flour translates to 32 tablespoons."
+      google.script.run.withSuccessHandler(get_val).convert(amount, sel_from, sel_to);
+      // insert output into text field
+    
+    }
+
+    function subs_results() {
+      const ingredient = document.querySelector("#ingredient").value;
+      var subs = google.script.run.withSuccessHandler(get_arr).subs(ingredient);
+    }
+
+  </script>
+
+</html>
