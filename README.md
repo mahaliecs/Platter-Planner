@@ -1,1 +1,2 @@
 # Platter-Planner
+A Google Docs add on that provides recipe & restaurant information for a given dish. Resources for recipes include links to blog posts & video tutorials, & a preview image of the dish. Restaraunts can be found within range of a given zip code & are shown both on a map & as a list of links to their websites. Unit conversions & ingredient substitutions can be found under the cooking tools tab; just for fun this tab also includes information on the origin of a given dish! This project was completed as a team with three other members.
